@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHOTO GALLERY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&family=Dancing+Script:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d0b09;
+  --surface:#131009;
+  --border:rgba(255,248,235,0.08);
+  --border-hi:rgba(255,248,235,0.16);
+  --text:#e8e0d0;
+  --muted:rgba(220,208,185,0.4);
+  --muted-hi:rgba(220,208,185,0.65);
+  --accent:#c8a96e;
+  --accent-dim:rgba(200,169,110,0.5);
+  --white:#f5f0e8;
+  --header-h:54px;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Lato',sans-serif;
+  font-weight:300;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:500;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.45;
+  mix-blend-mode:overlay;
+}
+
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:var(--header-h);
+  background:rgba(13,11,9,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+
+.logo{
+  font-family:'Lato',sans-serif;
+  font-weight:300;font-size:0.85rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;
+  display:flex;align-items:center;gap:1rem;
+}
+.logo-sep{color:var(--muted);font-weight:300}
+.logo-sub{
+  font-size:0.6rem;letter-spacing:0.22em;
+  color:var(--muted);font-weight:300;
+  text-transform:uppercase;
+}
+
+nav{display:flex;gap:2.5rem;align-items:center}
+nav a{
+  font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;transition:color 0.2s;cursor:pointer;
+}
+nav a:hover{color:var(--text)}
+
+/* ── CONTACT MODAL ── */
+.contact-modal{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(8,6,4,0.96);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.25s;
+}
+.contact-modal.open{opacity:1;pointer-events:all}
+.contact-box{
+  width:min(480px,90vw);
+  border:1px solid var(--border-hi);
+  padding:2.8rem 2.4rem;
+  background:rgba(19,16,9,0.85);
+}
+.contact-box h2{
+  font-weight:100;font-size:1rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--white);margin-bottom:2rem;
+}
+.contact-field{
+  display:flex;flex-direction:column;gap:0.5rem;
+  margin-bottom:1.4rem;
+}
+.contact-field label{
+  font-size:0.52rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--muted);
+}
+.contact-field input,
+.contact-field textarea{
+  background:rgba(255,248,235,0.04);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-family:'Lato',sans-serif;font-weight:300;font-size:0.85rem;
+  padding:0.7rem 0.9rem;outline:none;
+  transition:border-color 0.18s;
+  resize:none;
+}
+.contact-field input:focus,
+.contact-field textarea:focus{border-color:var(--border-hi)}
+.contact-field textarea{height:120px}
+.contact-submit{
+  width:100%;
+  background:none;border:1px solid var(--border-hi);
+  color:var(--muted-hi);
+  font-family:'Lato',sans-serif;font-weight:300;font-size:0.65rem;
+  letter-spacing:0.25em;text-transform:uppercase;
+  padding:0.85rem;cursor:pointer;
+  transition:all 0.2s;margin-top:0.4rem;
+}
+.contact-submit:hover{border-color:var(--accent);color:var(--accent)}
+.contact-close{
+  position:absolute;top:1.2rem;right:1.2rem;
+  background:none;border:1px solid var(--border-hi);
+  color:var(--muted-hi);width:42px;height:42px;border-radius:50%;
+  cursor:pointer;font-size:0.75rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.contact-close:hover{border-color:var(--text);color:var(--white)}
+.contact-thanks{
+  text-align:center;padding:2rem 0;
+  font-size:0.75rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--muted-hi);
+  display:none;
+}
+.contact-modal{position:fixed}
+
+/* ── HERO ── */
+.hero{
+  margin-top:var(--header-h);
+  padding:5.5rem 2.5rem 5rem;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  min-height:260px;
+  background-image:url('SDIM5206.jpg');
+  background-size:cover;
+  background-position:center;
+}
+.hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:60%;
+  background:linear-gradient(to top,var(--bg),transparent);
+  pointer-events:none;
+}
+.hero-ig{
+  position:absolute;bottom:1.2rem;right:1.4rem;z-index:2;
+  color:#e1659a;
+  opacity:0.85;
+  transition:opacity 0.2s;
+  line-height:0;
+}
+.hero-ig:hover{opacity:1}
+.hero-inner{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:1.2rem;
+}
+.hero-title{
+  font-weight:100;
+  font-size:clamp(1.1rem,3vw,2rem);
+  line-height:1.1;letter-spacing:0.3em;
+  color:var(--white);
+}
+
+/* ── TICKER ── */
+.ticker{
+  border-bottom:1px solid var(--border);
+  height:32px;overflow:hidden;
+  display:flex;align-items:center;
+}
+.ticker-track{
+  display:flex;white-space:nowrap;
+  animation:tick 28s linear infinite;
+}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-25%)}}
+.ticker-item{
+  font-size:0.58rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--muted);
+  padding:0 2.5rem;border-right:1px solid var(--border);
+  display:flex;align-items:center;height:32px;
+}
+.ticker-item.glow{color:var(--accent-dim)}
+
+/* ── CATEGORY NAV ── */
+.category-nav{
+  position:sticky;top:var(--header-h);z-index:90;
+  background:rgba(13,11,9,0.95);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 2.5rem;display:flex;
+  overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.category-nav::-webkit-scrollbar{display:none}
+
+.cat-btn{
+  flex-shrink:0;background:none;border:none;cursor:pointer;
+  padding:0 1.4rem;height:50px;
+  display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:center;gap:3px;
+  color:var(--muted);
+  border-bottom:2px solid transparent;
+  transition:all 0.18s;
+  position:relative;top:1px;
+  -webkit-tap-highlight-color:transparent;
+}
+.cat-btn:hover{color:var(--text)}
+.cat-btn.active{color:var(--white);border-bottom-color:var(--accent)}
+
+.cat-main{
+  font-weight:300;
+  font-size:0.88rem;letter-spacing:0.12em;line-height:1;text-transform:uppercase;
+}
+.cat-sub{
+  font-weight:300;
+  font-size:0.48rem;letter-spacing:0.22em;
+  text-transform:uppercase;opacity:0.45;
+}
+
+/* ── GALLERY SECTION ── */
+.gallery-section{display:none;padding:2rem 2.5rem 5rem}
+.gallery-section.active{display:block}
+
+.section-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:1.5rem;padding-bottom:1rem;
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;gap:0.5rem;
+}
+.section-title{
+  font-weight:100;
+  font-size:clamp(1rem,2.5vw,1.6rem);
+  letter-spacing:0.12em;text-transform:uppercase;
+  line-height:1;color:var(--white);
+}
+.section-meta{
+  font-weight:300;font-size:0.6rem;
+  letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;
+}
+
+/* ── GRID ── */
+.photo-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:3px;
+}
+.photo-card{
+  position:relative;overflow:hidden;cursor:crosshair;
+  background:var(--surface);
+  aspect-ratio:3/2;
+}
+.photo-card img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 0.9s cubic-bezier(0.16,1,0.3,1),filter 0.5s;
+  filter:saturate(0.85)contrast(1.08)brightness(0.92);
+  -webkit-user-drag:none;user-select:none;pointer-events:none;
+}
+.photo-card:hover img{
+  transform:scale(1.05);
+  filter:saturate(1.15)contrast(1.05)brightness(1.02);
+}
+.photo-card .overlay{
+  position:absolute;inset:0;
+  background:rgba(13,11,9,0);
+  transition:background 0.4s;
+  display:flex;align-items:flex-end;padding:1rem;
+}
+.photo-card:hover .overlay{background:rgba(13,11,9,0.65)}
+.cap{
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.28s 0.06s,transform 0.28s 0.06s;
+}
+.photo-card:hover .cap{opacity:1;transform:translateY(0)}
+.cap-label{
+  display:block;
+  font-size:0.52rem;font-weight:300;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:4px;
+}
+.cap-title{
+  display:block;
+  font-weight:300;font-style:italic;
+  font-size:0.95rem;letter-spacing:0.08em;color:var(--white);
+}
+
+/* ── LIGHTBOX ── */
+.lightbox{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(8,6,4,0.97);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.22s;
+}
+.lightbox.open{opacity:1;pointer-events:all}
+.lb-inner{
+  position:relative;
+  max-width:88vw;max-height:90vh;
+  display:flex;flex-direction:column;align-items:center;gap:1.2rem;
+}
+.lb-bar{
+  display:flex;align-items:center;gap:2rem;width:100%;
+  justify-content:space-between;
+}
+.lb-cap-text{
+  font-style:italic;font-weight:300;
+  font-size:0.85rem;letter-spacing:0.08em;color:var(--muted-hi);
+}
+.lb-counter{
+  font-size:0.58rem;font-weight:300;
+  letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;
+  white-space:nowrap;
+}
+.lb-exif{
+  position:fixed;bottom:1.4rem;right:1.6rem;
+  text-align:right;
+  font-size:0.6rem;font-weight:300;
+  letter-spacing:0.12em;line-height:1.7;
+  color:rgba(255,255,255,0.55);
+  pointer-events:none;
+}
+.lb-img-wrap{
+  position:relative;
+  display:inline-flex;
+  line-height:0;
+}
+.lb-img-wrap img{
+  max-width:100%;max-height:78vh;object-fit:contain;display:block;
+  -webkit-user-drag:none;user-select:none;
+}
+.lb-img-wrap::after{
+  content:'';position:absolute;inset:0;z-index:1;
+}
+.lb-sign{
+  position:absolute;bottom:0.7rem;right:0.9rem;
+  font-family:'Dancing Script',cursive;
+  font-size:0.95rem;
+  color:rgba(255,255,255,0.4);
+  pointer-events:none;
+  text-shadow:0 1px 3px rgba(0,0,0,0.4);
+  user-select:none;
+}
+.lb-close{
+  position:fixed;top:1.2rem;right:1.2rem;
+  background:none;border:1px solid var(--border-hi);
+  color:var(--muted-hi);
+  width:42px;height:42px;border-radius:50%;
+  cursor:pointer;font-size:0.75rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.lb-close:hover{border-color:var(--text);color:var(--white)}
+.lb-nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  background:none;border:1px solid var(--border-hi);
+  color:var(--muted-hi);
+  width:46px;height:46px;border-radius:50%;
+  cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.lb-nav:hover{border-color:var(--accent);color:var(--accent)}
+.lb-prev{left:1rem}
+.lb-next{right:1rem}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);padding:1.8rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:0.5rem;
+}
+footer p{
+  font-size:0.55rem;
+  letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);
+}
+
+/* ── RESPONSIVE: Tablet 1025px〜1280px ── */
+@media(max-width:1280px){
+  .photo-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ── RESPONSIVE: Tablet 768px〜1024px ── */
+@media(max-width:1024px){
+  .photo-grid{grid-template-columns:repeat(3,1fr)}
+  .gallery-section{padding:1.5rem 1.5rem 4rem}
+  header{padding:0 1.5rem}
+  .hero{padding:4rem 1.5rem 3.5rem}
+  .category-nav{padding:0 1rem}
+}
+
+/* ── RESPONSIVE: Mobile 〜767px ── */
+@media(max-width:767px){
+  :root{--header-h:50px}
+
+  header{padding:0 1rem}
+  .logo-sub{display:none}
+  .logo-sep{display:none}
+  nav{gap:1.5rem}
+  nav a{font-size:0.6rem;letter-spacing:0.12em}
+
+  .hero{
+    padding:3rem 1rem 2.5rem;
+    min-height:200px;
+  }
+
+  .ticker-item{padding:0 1.5rem;font-size:0.52rem}
+
+  .category-nav{padding:0 0.5rem}
+  .cat-btn{padding:0 0.9rem;height:46px}
+  .cat-main{font-size:0.8rem}
+
+  .gallery-section{padding:1.2rem 1rem 3rem}
+
+  .photo-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:2px;
+  }
+
+  /* スマホではホバーなしで常にキャプション表示 */
+  .cap{opacity:1;transform:translateY(0)}
+  .photo-card .overlay{background:rgba(13,11,9,0.5)}
+
+  .lb-inner{max-width:95vw}
+  .lb-inner img{max-height:65vh}
+  .lb-nav{width:38px;height:38px;font-size:0.9rem}
+  .lb-prev{left:0.4rem}
+  .lb-next{right:0.4rem}
+  .lb-close{top:0.8rem;right:0.8rem;width:38px;height:38px}
+  .lb-bar{gap:1rem}
+  .lb-cap-text{font-size:0.75rem}
+
+  footer{padding:1.4rem 1rem;flex-direction:column;align-items:flex-start;gap:0.4rem}
+}
+
+/* ── RESPONSIVE: Small mobile 〜480px ── */
+@media(max-width:480px){
+  nav{display:none}
+  .photo-grid{grid-template-columns:repeat(2,1fr)}
+  .section-title{letter-spacing:0.08em}
+  .section-meta{font-size:0.52rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    Gallery
+    <span class="logo-sep">/</span>
+    <span class="logo-sub">2025 Archive</span>
+  </a>
+  <nav>
+    <a id="contact-open">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="hero-title">Kotaro's Photos</h1>
+  </div>
+  <a class="hero-ig" href="https://www.instagram.com/imktrngs6/?hl=ja" target="_blank" rel="noopener" aria-label="Instagram">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+  </div>
+</div>
+
+<nav class="category-nav" role="tablist">
+  <button class="cat-btn active" data-target="works" role="tab">
+    <span class="cat-main">Works</span>
+    <span class="cat-sub">作品</span>
+  </button>
+  <button class="cat-btn" data-target="spain" role="tab">
+    <span class="cat-main">Spain</span>
+    <span class="cat-sub">スペイン</span>
+  </button>
+  <button class="cat-btn" data-target="iceland" role="tab">
+    <span class="cat-main">Iceland</span>
+    <span class="cat-sub">アイスランド</span>
+  </button>
+  <button class="cat-btn" data-target="srilanka" role="tab">
+    <span class="cat-main">Sri Lanka</span>
+    <span class="cat-sub">スリランカ</span>
+  </button>
+  <button class="cat-btn" data-target="tokyo" role="tab">
+    <span class="cat-main">Japan</span>
+    <span class="cat-sub">日本</span>
+  </button>
+</nav>
+
+<section class="gallery-section active" id="gallery-works">
+  <div class="section-header">
+    <h2 class="section-title">Works</h2>
+    <span class="section-meta">作品 — Selected Series</span>
+  </div>
+  <div class="photo-grid" id="grid-works"></div>
+</section>
+
+<section class="gallery-section" id="gallery-spain">
+  <div class="section-header">
+    <h2 class="section-title">Spain</h2>
+    <span class="section-meta">スペイン — España</span>
+  </div>
+  <div class="photo-grid" id="grid-spain"></div>
+</section>
+
+<section class="gallery-section" id="gallery-iceland">
+  <div class="section-header">
+    <h2 class="section-title">Iceland</h2>
+    <span class="section-meta">アイスランド — Ísland</span>
+  </div>
+  <div class="photo-grid" id="grid-iceland"></div>
+</section>
+
+<section class="gallery-section" id="gallery-srilanka">
+  <div class="section-header">
+    <h2 class="section-title">Sri Lanka</h2>
+    <span class="section-meta">スリランカ — Sri Lanka</span>
+  </div>
+  <div class="photo-grid" id="grid-srilanka"></div>
+</section>
+
+<section class="gallery-section" id="gallery-tokyo">
+  <div class="section-header">
+    <h2 class="section-title">Japan</h2>
+    <span class="section-meta">日本 — Japan</span>
+  </div>
+  <div class="photo-grid" id="grid-tokyo"></div>
+</section>
+
+<div class="contact-modal" id="contact-modal" role="dialog" aria-modal="true">
+  <div class="contact-box">
+    <h2>Contact</h2>
+    <form id="contact-form" action="https://formspree.io/f/mqenlzaw" method="POST">
+      <div class="contact-field">
+        <label for="c-name">お名前</label>
+        <input id="c-name" type="text" name="name" required placeholder="Yamada Taro">
+      </div>
+      <div class="contact-field">
+        <label for="c-email">メールアドレス</label>
+        <input id="c-email" type="email" name="email" required placeholder="mail@example.com">
+      </div>
+      <div class="contact-field">
+        <label for="c-message">お問い合わせ内容</label>
+        <textarea id="c-message" name="message" required placeholder="ご用件をどうぞ"></textarea>
+      </div>
+      <button class="contact-submit" type="submit">Send Message</button>
+    </form>
+    <div class="contact-thanks" id="contact-thanks">
+      送信しました。<br>お問い合わせありがとうございます。
+    </div>
+  </div>
+  <button class="contact-close" id="contact-close" aria-label="閉じる">✕</button>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lb-inner">
+    <div class="lb-img-wrap">
+      <img id="lb-img" src="" alt="">
+      <div class="lb-sign">Kotaro</div>
+    </div>
+    <div class="lb-bar">
+      <span class="lb-counter" id="lb-counter"></span>
+    </div>
+  </div>
+  <div class="lb-exif" id="lb-exif"></div>
+  <button class="lb-close" id="lb-close" aria-label="閉じる">✕</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="前へ">&#8592;</button>
+  <button class="lb-nav lb-next" id="lb-next" aria-label="次へ">&#8594;</button>
+</div>
+
+<footer>
+  <p>© 2025 Photo Gallery</p>
+  <p>All rights reserved</p>
+</footer>
+
+<script>
+const PALS = {
+  works:   [['#100e0c','#1e1a14','#b8a070'],['#0e0c10','#181420','#9080a0'],['#0c100e','#141e16','#708868'],['#100c0a','#1e1410','#b87850']],
+  spain:   [['#140c08','#281408','#d4784a'],['#10080c','#200e18','#c45870'],['#100e04','#201c08','#c8a030'],['#0c0a14','#14102a','#8860c0']],
+  iceland: [['#080e14','#0e1a28','#4880b0'],['#08100e','#0e1e18','#38a088'],['#080e16','#0e1630','#3860c0'],['#060e12','#0a1820','#4090b8']],
+  tokyo:   [['#100608','#200c14','#c02860'],['#08080e','#10101e','#7040c0'],['#100806','#201008','#c04820'],['#080a14','#10102a','#3050c8']],
+  etc:     [['#0c0c0e','#18181e','#7878a8'],['#0c0808','#201010','#a84040'],['#080c08','#101a10','#408040'],['#0c0a04','#1e1808','#a88840']],
+};
+
+function svgSrc(label, sub, cat, idx, w, h) {
+  const pal = PALS[cat] || PALS.works;
+  const [bg, mid, fg] = pal[idx % pal.length];
+  const lines = Array.from({length:Math.floor(h/4)},(_,i)=>
+    `<line x1="0" y1="${i*4}" x2="${w}" y2="${i*4}" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>`
+  ).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+<defs>
+  <radialGradient id="g1" cx="35%" cy="45%" r="65%">
+    <stop offset="0%" stop-color="${mid}"/>
+    <stop offset="100%" stop-color="${bg}"/>
+  </radialGradient>
+  <radialGradient id="g2" cx="80%" cy="70%" r="40%">
+    <stop offset="0%" stop-color="${fg}" stop-opacity="0.25"/>
+    <stop offset="100%" stop-color="${fg}" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="${w}" height="${h}" fill="url(#g1)"/>
+<rect width="${w}" height="${h}" fill="url(#g2)"/>
+${lines}
+<text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle"
+  font-family="Georgia,serif" font-style="italic" font-weight="300"
+  font-size="${Math.round(w*0.058)}" fill="${fg}" opacity="0.88">${label}</text>
+<text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle"
+  font-family="monospace" font-size="${Math.round(w*0.026)}"
+  fill="${fg}" letter-spacing="4" opacity="0.38">${sub}</text>
+</svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+const DATA = {
+  works:[
+    {label:'Work 01',sub:'',caption:'Work 01',idx:0,src:'V09SS1MvMS5KUEc=', exif:'SIGMA fp\n70mm · f/2.8 · 1/2500s · ISO 1600'},
+    {label:'Work 02',sub:'',caption:'Work 02',idx:1,src:'V09SS1MvMi5KUEc=', exif:'NIKON D750\n24mm · f/4.0 · 25.0s · ISO 2000'},
+    {label:'Work 03',sub:'',caption:'Work 03',idx:2,src:'V09SS1MvMy5KUEc=', exif:'NIKON D750\n120mm · f/4.0 · 1/2500s · ISO 250'},
+    {label:'Work 04',sub:'',caption:'Work 04',idx:3,src:'V09SS1MvNC5qcGc=', exif:'SIGMA fp\n45mm · f/2.8 · 1/1250s · ISO 400'},
+    {label:'Work 05',sub:'',caption:'Work 05',idx:0,src:'V09SS1MvNS5KUEc=', exif:'SIGMA fp\n45mm · f/2.8 · 1/5000s · ISO 400'},
+    {label:'Work 06',sub:'',caption:'Work 06',idx:1,src:'V09SS1MvNi5qcGc=', exif:'SIGMA fp\n45mm · f/4.5 · 1/1000s · ISO 1600'},
+    {label:'Work 07',sub:'',caption:'Work 07',idx:2,src:'V09SS1MvNy5qcGc=', exif:'SIGMA fp\n45mm · f/2.8 · 1/640s · ISO 100'},
+    {label:'Work 08',sub:'',caption:'Work 08',idx:3,src:'V09SS1MvOC5qcGc=', exif:'SIGMA fp\n36mm · f/2.8 · 1/4000s · ISO 125'},
+    {label:'Work 09',sub:'',caption:'Work 09',idx:0,src:'V09SS1MvOS5KUEc=', exif:'SIGMA fp\n70mm · f/2.8 · 1/1600s · ISO 400'},
+    {label:'Work 10',sub:'',caption:'Work 10',idx:1,src:'V09SS1MvMTAuSlBH',exif:''},
+    {label:'Work 11',sub:'',caption:'Work 11',idx:2,src:'V09SS1MvMTEuanBn',exif:''},
+    {label:'Work 12',sub:'',caption:'Work 12',idx:3,src:'V09SS1MvMTIuanBn',exif:'NIKON D750\n66mm · f/4.0 · 1/4000s · ISO 320'},
+  ],
+  spain:[
+    {label:'Spain 01',sub:'',caption:'Spain 01',idx:0,src:'U1BBSU4vMS5KUEc=',exif:'SIGMA fp\n33mm · f/2.8 · 1/800s · ISO 200'},
+    {label:'Spain 02',sub:'',caption:'Spain 02',idx:1,src:'U1BBSU4vMi5KUEc=',exif:'SIGMA fp\n28mm · f/2.8 · 1/2500s · ISO 250'},
+    {label:'Spain 03',sub:'',caption:'Spain 03',idx:2,src:'U1BBSU4vMy5KUEc=',exif:'SIGMA fp\n28mm · f/2.8 · 1/8000s · ISO 250'},
+    {label:'Spain 04',sub:'',caption:'Spain 04',idx:3,src:'U1BBSU4vNC5KUEc=',exif:'SIGMA fp\n30mm · f/2.8 · 1/4000s · ISO 400'},
+    {label:'Spain 05',sub:'',caption:'Spain 05',idx:0,src:'U1BBSU4vNS5KUEc=',exif:'SIGMA fp\n28mm · f/2.8 · 1/8000s · ISO 1250'},
+    {label:'Spain 06',sub:'',caption:'Spain 06',idx:1,src:'U1BBSU4vNi5KUEc=',exif:'SIGMA fp\n28mm · f/2.8 · 1/500s · ISO 320'},
+    {label:'Spain 07',sub:'',caption:'Spain 07',idx:2,src:'U1BBSU4vNy5KUEc=',exif:'SIGMA fp\n56mm · f/2.8 · 1/25s · ISO 1600'},
+    {label:'Spain 08',sub:'',caption:'Spain 08',idx:3,src:'U1BBSU4vOC5KUEc=',exif:'SIGMA fp\n70mm · f/2.8 · 1/160s · ISO 12800'},
+    {label:'Spain 09',sub:'',caption:'Spain 09',idx:0,src:'U1BBSU4vOS5KUEc=',exif:'SIGMA fp\n67mm · f/2.8 · 1/3200s · ISO 1000'},
+    {label:'Spain 10',sub:'',caption:'Spain 10',idx:1,src:'U1BBSU4vMTAuSlBH',exif:'SIGMA fp\n44mm · f/2.8 · 1/200s · ISO 400'},
+    {label:'Spain 11',sub:'',caption:'Spain 11',idx:2,src:'U1BBSU4vMTEuSlBH',exif:'SIGMA fp\n30mm · f/2.8 · 1/2000s · ISO 400'},
+    {label:'Spain 12',sub:'',caption:'Spain 12',idx:3,src:'U1BBSU4vMTIuSlBH',exif:'SIGMA fp\n28mm · f/2.8 · 1/2500s · ISO 1000'},
+    {label:'Spain 13',sub:'',caption:'Spain 13',idx:0,src:'U1BBSU4vMTMuanBn',exif:'SIGMA fp\n70mm · f/2.8 · 1/125s · ISO 400'},
+    {label:'Spain 14',sub:'',caption:'Spain 14',idx:1,src:'U1BBSU4vMTQuSlBH',exif:'SIGMA fp\n60mm · f/2.8 · 1/1000s · ISO 64'},
+    {label:'Spain 15',sub:'',caption:'Spain 15',idx:2,src:'U1BBSU4vMTUuanBn',exif:'SIGMA fp\n28mm · f/2.8 · 1/50s · ISO 1600'},
+    {label:'Spain 16',sub:'',caption:'Spain 16',idx:3,src:'U1BBSU4vMTYuSlBH',exif:'SIGMA fp\n70mm · f/2.8 · 1/800s · ISO 125'},
+    {label:'Spain 17',sub:'',caption:'Spain 17',idx:0,src:'U1BBSU4vMTcuSlBH',exif:'SIGMA fp\n70mm · f/2.8 · 1/6000s · ISO 250'},
+    {label:'Spain 18',sub:'',caption:'Spain 18',idx:1,src:'U1BBSU4vMTguSlBH',exif:'SIGMA fp\n51mm · f/2.8 · 1/200s · ISO 12800'},
+    {label:'Spain 19',sub:'',caption:'Spain 19',idx:2,src:'U1BBSU4vMTkuanBn',exif:'SIGMA fp\n70mm · f/2.8 · 1/640s · ISO 6400'},
+    {label:'Spain 20',sub:'',caption:'Spain 20',idx:3,src:'U1BBSU4vMjAuanBn',exif:'SIGMA fp\n36mm · f/2.8 · 1/4000s · ISO 125'},
+    {label:'Spain 21',sub:'',caption:'Spain 21',idx:0,src:'U1BBSU4vMjEuSlBH',exif:'SIGMA fp\n70mm · f/2.8 · 1/250s · ISO 125'},
+    {label:'Spain 22',sub:'',caption:'Spain 22',idx:1,src:'U1BBSU4vMjIuSlBH',exif:'SIGMA fp\n67mm · f/2.8 · 1/1250s · ISO 250'},
+    {label:'Spain 23',sub:'',caption:'Spain 23',idx:2,src:'U1BBSU4vMjMuSlBH',exif:'SIGMA fp\n70mm · f/2.8 · 1/1600s · ISO 400'},
+    {label:'Spain 24',sub:'',caption:'Spain 24',idx:3,src:'U1BBSU4vMjQuSlBH',exif:'SIGMA fp\n29mm · f/2.8 · 1/4000s · ISO 640'},
+  ],
+  iceland:[
+    {label:'Iceland 01',sub:'',caption:'Iceland 01',idx:0,src:'SUNFTEFORC8xLmpwZw==',exif:'NIKON D750\n65mm · f/4.0 · 1/160s · ISO 160'},
+    {label:'Iceland 02',sub:'',caption:'Iceland 02',idx:1,src:'SUNFTEFORC8yLkpQRw==',exif:'NIKON D750\n44mm · f/4.0 · 1/800s · ISO 320'},
+    {label:'Iceland 03',sub:'',caption:'Iceland 03',idx:2,src:'SUNFTEFORC8zLkpQRw==',exif:'NIKON D750\n24mm · f/4.0 · 25.0s · ISO 2000'},
+    {label:'Iceland 04',sub:'',caption:'Iceland 04',idx:3,src:'SUNFTEFORC80LmpwZWc=',exif:'NIKON D750\n24mm · f/4.0 · 1/2000s · ISO 320'},
+    {label:'Iceland 05',sub:'',caption:'Iceland 05',idx:0,src:'SUNFTEFORC81LmpwZWc=',exif:'NIKON D750\n24mm · f/4.0 · 1/1600s · ISO 400'},
+    {label:'Iceland 06',sub:'',caption:'Iceland 06',idx:1,src:'SUNFTEFORC82LmpwZw==',exif:'NIKON D750\n70mm · f/4.0 · 1/2500s · ISO 200'},
+    {label:'Iceland 07',sub:'',caption:'Iceland 07',idx:2,src:'SUNFTEFORC83LkpQRw==',exif:'NIKON D750\n30mm · f/4.0 · 1/125s · ISO 1250'},
+    {label:'Iceland 08',sub:'',caption:'Iceland 08',idx:3,src:'SUNFTEFORC84LkpQRw==',exif:'NIKON D750\n24mm · f/4.0 · 10.0s · ISO 3200'},
+    {label:'Iceland 09',sub:'',caption:'Iceland 09',idx:0,src:'SUNFTEFORC85LkpQRw==',exif:'NIKON D750\n24mm · f/4.0 · 5.0s · ISO 3200'},
+    {label:'Iceland 10',sub:'',caption:'Iceland 10',idx:1,src:'SUNFTEFORC8xMC5qcGc=',exif:'NIKON D750\n65mm · f/4.0 · 1/250s · ISO 500'},
+    {label:'Iceland 11',sub:'',caption:'Iceland 11',idx:2,src:'SUNFTEFORC8xMS5KUEc=',exif:'NIKON D750\n58mm · f/4.0 · 1/50s · ISO 2000'},
+    {label:'Iceland 12',sub:'',caption:'Iceland 12',idx:3,src:'SUNFTEFORC8xMi5KUEc=',exif:'NIKON D750\n145mm · f/4.8 · 1/250s · ISO 500'},
+    {label:'Iceland 13',sub:'',caption:'Iceland 13',idx:0,src:'SUNFTEFORC8xMy5KUEc=',exif:'NIKON D750\n120mm · f/4.0 · 1/1600s · ISO 250'},
+    {label:'Iceland 14',sub:'',caption:'Iceland 14',idx:1,src:'SUNFTEFORC8xNC5KUEc=',exif:'NIKON D750\n24mm · f/4.0 · 1/1600s · ISO 250'},
+    {label:'Iceland 15',sub:'',caption:'Iceland 15',idx:2,src:'SUNFTEFORC8xNS5KUEc=',exif:'NIKON D750\n24mm · f/4.0 · 1/800s · ISO 320'},
+    {label:'Iceland 16',sub:'',caption:'Iceland 16',idx:3,src:'SUNFTEFORC8xNi5qcGVn',exif:'NIKON D750\n24mm · f/4.0 · 1/1600s · ISO 400'},
+    {label:'Iceland 17',sub:'',caption:'Iceland 17',idx:0,src:'SUNFTEFORC8xNy5KUEc=',exif:'NIKON D750\n70mm · f/4.0 · 1/2500s · ISO 200'},
+    {label:'Iceland 18',sub:'',caption:'Iceland 18',idx:1,src:'SUNFTEFORC8xOC5KUEc=',exif:'NIKON D750\n44mm · f/4.0 · 1/800s · ISO 320'},
+  ],
+  tokyo:[
+    {label:'Japan 01',sub:'',caption:'Japan 01',idx:0,src:'SkFQQU4vMS5qcGc=',exif:'SIGMA fp\n42mm · f/2.8 · 1/200s · ISO 6400'},
+    {label:'Japan 02',sub:'',caption:'Japan 02',idx:1,src:'SkFQQU4vMi5qcGc=',exif:'NIKON D750\n50mm · f/1.8 · 1/320s · ISO 400'},
+    {label:'Japan 03',sub:'',caption:'Japan 03',idx:2,src:'SkFQQU4vMy5qcGc=',exif:'NIKON D750\n31mm · f/4.0 · 1/1600s · ISO 200'},
+    {label:'Japan 04',sub:'',caption:'Japan 04',idx:3,src:'SkFQQU4vNC5qcGc=',exif:'SIGMA fp\n45mm · f/2.8 · 1/1250s · ISO 400'},
+    {label:'Japan 05',sub:'',caption:'Japan 05',idx:0,src:'SkFQQU4vNS5KUEc=',exif:'SIGMA fp\n28mm · f/2.8 · 1/15s · ISO 3200'},
+    {label:'Japan 06',sub:'',caption:'Japan 06',idx:1,src:'SkFQQU4vNi5qcGc=',exif:'SIGMA fp\n45mm · f/2.8 · 1/160s · ISO 25600'},
+    {label:'Japan 07',sub:'',caption:'Japan 07',idx:2,src:'SkFQQU4vNy5KUEc=',exif:'SIGMA fp\n45mm · f/2.8 · 1/5000s · ISO 400'},
+    {label:'Japan 08',sub:'',caption:'Japan 08',idx:3,src:'SkFQQU4vOC5KUEc=',exif:'SIGMA fp\n45mm · f/2.8 · 1/800s · ISO 6400'},
+    {label:'Japan 09',sub:'',caption:'Japan 09',idx:0,src:'SkFQQU4vOS5KUEc=',exif:'SIGMA fp\n45mm · f/2.8 · 1/800s · ISO 6400'},
+    {label:'Japan 10',sub:'',caption:'Japan 10',idx:1,src:'SkFQQU4vMTAuanBn',exif:'SIGMA fp\n45mm · f/4.5 · 1/1000s · ISO 1600'},
+    {label:'Japan 11',sub:'',caption:'Japan 11',idx:2,src:'SkFQQU4vMTEuanBn',exif:'SIGMA fp\n45mm · f/4.5 · 1/1250s · ISO 1600'},
+    {label:'Japan 12',sub:'',caption:'Japan 12',idx:3,src:'SkFQQU4vMTIuanBn',exif:'SIGMA fp\n45mm · f/2.8 · 1/640s · ISO 100'},
+    {label:'Japan 13',sub:'',caption:'Japan 13',idx:0,src:'SkFQQU4vMTMuanBn',exif:'SIGMA fp\n45mm · f/2.8 · 1/250s · ISO 6400'},
+    {label:'Japan 14',sub:'',caption:'Japan 14',idx:1,src:'SkFQQU4vMTQuanBn',exif:'SIGMA fp\n45mm · f/2.8 · 1/100s · ISO 6400'},
+    {label:'Japan 15',sub:'',caption:'Japan 15',idx:2,src:'SkFQQU4vMTUuanBn',exif:'SIGMA fp\n45mm · f/2.8 · 1/4000s · ISO 6400'},
+    {label:'Japan 16',sub:'',caption:'Japan 16',idx:3,src:'SkFQQU4vMTYuSlBH',exif:'SIGMA fp\n56mm · f/2.8 · 1/160s · ISO 320'},
+    {label:'Japan 17',sub:'',caption:'Japan 17',idx:0,src:'SkFQQU4vMTcuSlBH',exif:'SIGMA fp\n70mm · f/2.8 · 1/2500s · ISO 1600'},
+    {label:'Japan 18',sub:'',caption:'Japan 18',idx:1,src:'SkFQQU4vMTguanBn',exif:'SIGMA fp\n53mm · f/2.8 · 1/8000s · ISO 640'},
+    {label:'Japan 19',sub:'',caption:'Japan 19',idx:2,src:'SkFQQU4vMTkuSlBH',exif:'SIGMA fp\n30mm · f/2.8 · 1/5000s · ISO 8000'},
+    {label:'Japan 20',sub:'',caption:'Japan 20',idx:3,src:'SkFQQU4vMjAuanBn',exif:'SIGMA fp\n48mm · f/6.3 · 1/4000s · ISO 125'},
+    {label:'Japan 21',sub:'',caption:'Japan 21',idx:0,src:'SkFQQU4vMjEuanBn',exif:'SIGMA fp\n29mm · f/3.2 · 1/200s · ISO 500'},
+    {label:'Japan 22',sub:'',caption:'Japan 22',idx:1,src:'SkFQQU4vMjIuanBn',exif:'SIGMA fp\n58mm · f/3.2 · 1/2000s · ISO 100'},
+    {label:'Japan 23',sub:'',caption:'Japan 23',idx:2,src:'SkFQQU4vMjMuanBn',exif:'SIGMA fp\n28mm · f/2.8 · 1/30s · ISO 20000'},
+    {label:'Japan 24',sub:'',caption:'Japan 24',idx:3,src:'SkFQQU4vMjQuanBn',exif:'SIGMA fp\n70mm · f/2.8 · 1/5000s · ISO 1250'},
+  ],
+  srilanka:[
+    {label:'Sri Lanka 01',sub:'',caption:'Sri Lanka 01',idx:0,src:'U1JJTEFOS0EvMS5KUEc=', exif:''},
+    {label:'Sri Lanka 02',sub:'',caption:'Sri Lanka 02',idx:1,src:'U1JJTEFOS0EvMi5KUEc=', exif:''},
+    {label:'Sri Lanka 03',sub:'',caption:'Sri Lanka 03',idx:2,src:'U1JJTEFOS0EvMy5KUEc=', exif:''},
+    {label:'Sri Lanka 04',sub:'',caption:'Sri Lanka 04',idx:3,src:'U1JJTEFOS0EvNC5KUEc=', exif:''},
+    {label:'Sri Lanka 05',sub:'',caption:'Sri Lanka 05',idx:0,src:'U1JJTEFOS0EvNS5KUEc=', exif:''},
+    {label:'Sri Lanka 06',sub:'',caption:'Sri Lanka 06',idx:1,src:'U1JJTEFOS0EvNi5KUEc=', exif:''},
+    {label:'Sri Lanka 07',sub:'',caption:'Sri Lanka 07',idx:2,src:'U1JJTEFOS0EvNy5KUEc=', exif:''},
+    {label:'Sri Lanka 08',sub:'',caption:'Sri Lanka 08',idx:3,src:'U1JJTEFOS0EvOC5KUEc=', exif:''},
+    {label:'Sri Lanka 09',sub:'',caption:'Sri Lanka 09',idx:0,src:'U1JJTEFOS0EvOS5KUEc=', exif:''},
+    {label:'Sri Lanka 10',sub:'',caption:'Sri Lanka 10',idx:1,src:'U1JJTEFOS0EvMTAuSlBH',exif:''},
+    {label:'Sri Lanka 11',sub:'',caption:'Sri Lanka 11',idx:2,src:'U1JJTEFOS0EvMTEuSlBH',exif:''},
+    {label:'Sri Lanka 12',sub:'',caption:'Sri Lanka 12',idx:3,src:'U1JJTEFOS0EvMTIuSlBH',exif:''},
+    {label:'Sri Lanka 13',sub:'',caption:'Sri Lanka 13',idx:0,src:'U1JJTEFOS0EvMTMuSlBH',exif:''},
+    {label:'Sri Lanka 14',sub:'',caption:'Sri Lanka 14',idx:1,src:'U1JJTEFOS0EvMTQuSlBH',exif:''},
+    {label:'Sri Lanka 15',sub:'',caption:'Sri Lanka 15',idx:2,src:'U1JJTEFOS0EvMTUuSlBH',exif:''},
+    {label:'Sri Lanka 16',sub:'',caption:'Sri Lanka 16',idx:3,src:'U1JJTEFOS0EvMTYuSlBH',exif:''},
+    {label:'Sri Lanka 17',sub:'',caption:'Sri Lanka 17',idx:0,src:'U1JJTEFOS0EvMTcuSlBH',exif:''},
+    {label:'Sri Lanka 18',sub:'',caption:'Sri Lanka 18',idx:1,src:'U1JJTEFOS0EvMTguSlBH',exif:''},
+    {label:'Sri Lanka 19',sub:'',caption:'Sri Lanka 19',idx:2,src:'U1JJTEFOS0EvMTkuSlBH',exif:''},
+  ],
+};
+
+let curPhotos=[], curIdx=0, curCat='works';
+
+function buildGrid(id, cat, items) {
+  const g = document.getElementById(id);
+  if(!g) return;
+  g.innerHTML='';
+  items.forEach((item, i) => {
+    const src = item.src ? atob(item.src) : svgSrc(item.label, item.sub, cat, item.idx, 400, 267);
+    const card = document.createElement('div');
+    card.className='photo-card';
+    card.innerHTML=`<img src="${src}" alt="${item.caption}" loading="lazy">
+<div class="overlay"><div class="cap">
+  <span class="cap-title">${item.label}</span>
+</div></div>`;
+    card.addEventListener('click', () => { curCat=cat; openLB(items, i); });
+    g.appendChild(card);
+  });
+}
+
+function openLB(photos, idx) {
+  curPhotos=photos; curIdx=idx; showLB();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function showLB() {
+  const p=curPhotos[curIdx];
+  document.getElementById('lb-img').src=p.src ? atob(p.src) : svgSrc(p.label, p.sub, curCat, p.idx, 960, 640);
+  document.getElementById('lb-counter').textContent=`${curIdx+1} / ${curPhotos.length}`;
+  const exifEl = document.getElementById('lb-exif');
+  exifEl.innerHTML = (p.exif || '').replace(/\n/g,'<br>');
+}
+function closeLB() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+function prevLB() { curIdx=(curIdx-1+curPhotos.length)%curPhotos.length; showLB(); }
+function nextLB() { curIdx=(curIdx+1)%curPhotos.length; showLB(); }
+
+document.getElementById('lb-close').addEventListener('click', closeLB);
+document.getElementById('lb-prev').addEventListener('click', prevLB);
+document.getElementById('lb-next').addEventListener('click', nextLB);
+document.getElementById('lightbox').addEventListener('click', e => {
+  if(e.target===document.getElementById('lightbox')) closeLB();
+});
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('lightbox').classList.contains('open')) return;
+  if(e.key==='Escape') closeLB();
+  if(e.key==='ArrowLeft') prevLB();
+  if(e.key==='ArrowRight') nextLB();
+});
+
+(function(){
+  const lb = document.getElementById('lightbox');
+  let startX=0, startY=0;
+  lb.addEventListener('touchstart', e => {
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+  },{passive:true});
+  lb.addEventListener('touchend', e => {
+    const dx=e.changedTouches[0].clientX-startX;
+    const dy=e.changedTouches[0].clientY-startY;
+    if(Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>40){
+      dx<0 ? nextLB() : prevLB();
+    }
+  },{passive:true});
+})();
+
+buildGrid('grid-works','works',DATA.works);
+buildGrid('grid-spain','spain',DATA.spain);
+buildGrid('grid-iceland','iceland',DATA.iceland);
+buildGrid('grid-srilanka','srilanka',DATA.srilanka);
+buildGrid('grid-tokyo','tokyo',DATA.tokyo);
+
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const t=btn.dataset.target;
+    document.querySelectorAll('.gallery-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('gallery-'+t).classList.add('active');
+  });
+});
+
+// Contact modal
+const contactModal = document.getElementById('contact-modal');
+document.getElementById('contact-open').addEventListener('click', () => {
+  contactModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+document.getElementById('contact-close').addEventListener('click', closeContact);
+contactModal.addEventListener('click', e => { if(e.target===contactModal) closeContact(); });
+function closeContact() {
+  contactModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape' && contactModal.classList.contains('open')) closeContact();
+});
+document.getElementById('contact-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const res = await fetch(form.action, {
+    method:'POST',
+    body: new FormData(form),
+    headers:{ 'Accept':'application/json' }
+  });
+  if(res.ok) {
+    form.style.display = 'none';
+    document.getElementById('contact-thanks').style.display = 'block';
+    setTimeout(closeContact, 2500);
+  }
+});
+
+// 右クリック禁止
+document.addEventListener('contextmenu', e => {
+  if(e.target.tagName==='IMG' || e.target.closest('.photo-card,.lightbox')) e.preventDefault();
+});
+
+// ドラッグ禁止
+document.addEventListener('dragstart', e => {
+  if(e.target.tagName==='IMG') e.preventDefault();
+});
+
+// キーボードによる保存禁止 (Ctrl/Cmd+S)
+document.addEventListener('keydown', e => {
+  if((e.ctrlKey||e.metaKey) && e.key==='s') e.preventDefault();
+});
+</script>
+</body>
+</html>
