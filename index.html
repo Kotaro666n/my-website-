@@ -293,6 +293,7 @@ nav a:hover{color:var(--text)}
   position:relative;overflow:hidden;cursor:crosshair;
   background:var(--surface);
   aspect-ratio:3/2;
+  transition:opacity 0.32s;
 }
 .photo-card img{
   width:100%;height:100%;object-fit:cover;display:block;
@@ -564,44 +565,12 @@ footer p{
 </nav>
 </div>
 
-<section class="gallery-section active" id="gallery-works">
+<section class="gallery-section active" id="gallery-main">
   <div class="section-header">
-    <h2 class="section-title">Works</h2>
-    <span class="section-meta">作品 — Selected Series</span>
+    <h2 class="section-title" id="section-title">All</h2>
+    <span class="section-meta" id="section-meta">全カテゴリ — All Photos</span>
   </div>
-  <div class="photo-grid" id="grid-works"></div>
-</section>
-
-<section class="gallery-section" id="gallery-spain">
-  <div class="section-header">
-    <h2 class="section-title">Spain</h2>
-    <span class="section-meta">スペイン — España</span>
-  </div>
-  <div class="photo-grid" id="grid-spain"></div>
-</section>
-
-<section class="gallery-section" id="gallery-iceland">
-  <div class="section-header">
-    <h2 class="section-title">Iceland</h2>
-    <span class="section-meta">アイスランド — Ísland</span>
-  </div>
-  <div class="photo-grid" id="grid-iceland"></div>
-</section>
-
-<section class="gallery-section" id="gallery-srilanka">
-  <div class="section-header">
-    <h2 class="section-title">Sri Lanka</h2>
-    <span class="section-meta">スリランカ — Sri Lanka</span>
-  </div>
-  <div class="photo-grid" id="grid-srilanka"></div>
-</section>
-
-<section class="gallery-section" id="gallery-tokyo">
-  <div class="section-header">
-    <h2 class="section-title">Japan</h2>
-    <span class="section-meta">日本 — Japan</span>
-  </div>
-  <div class="photo-grid" id="grid-tokyo"></div>
+  <div class="photo-grid" id="grid-main"></div>
 </section>
 
 <div class="contact-modal" id="contact-modal" role="dialog" aria-modal="true">
@@ -801,21 +770,58 @@ const DATA = {
 
 let curPhotos=[], curIdx=0, curCat='works';
 
-function buildGrid(id, cat, items) {
-  const g = document.getElementById(id);
-  if(!g) return;
-  g.innerHTML='';
-  items.forEach((item, i) => {
-    const src = item.src ? atob(item.src) : svgSrc(item.label, item.sub, cat, item.idx, 400, 267);
+const SECTION_LABELS = {
+  works:    {title:'All',       meta:'全カテゴリ — All Photos'},
+  spain:    {title:'Spain',     meta:'スペイン — España'},
+  iceland:  {title:'Iceland',   meta:'アイスランド — Ísland'},
+  srilanka: {title:'Sri Lanka', meta:'スリランカ — Sri Lanka'},
+  tokyo:    {title:'Japan',     meta:'日本 — Japan'},
+};
+
+let allCards = [];
+
+function buildMainGrid() {
+  const all = [];
+  Object.entries(DATA).forEach(([cat, items]) => items.forEach(item => all.push({...item, cat})));
+  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
+  const g = document.getElementById('grid-main');
+  g.innerHTML=''; allCards=[];
+  all.forEach(item => {
+    const src = item.src ? atob(item.src) : svgSrc(item.label, item.sub, item.cat, item.idx, 400, 267);
     const card = document.createElement('div');
-    card.className='photo-card';
+    card.className='photo-card'; card.dataset.cat=item.cat;
     card.innerHTML=`<img src="${src}" alt="${item.caption}" loading="lazy">
 <div class="overlay"><div class="cap">
   <span class="cap-title">${item.label}</span>
 </div></div>`;
-    card.addEventListener('click', () => { curCat=cat; openLB(items, i); });
-    g.appendChild(card);
+    card.addEventListener('click', () => {
+      const vis = allCards.filter(c=>c.card.style.display!=='none');
+      const idx = vis.findIndex(c=>c.data===item);
+      curCat=item.cat; openLB(vis.map(c=>c.data), idx);
+    });
+    g.appendChild(card); allCards.push({card, data:item});
   });
+}
+
+let _filterTimer=null;
+function filterGrid(cat) {
+  const lbl = SECTION_LABELS[cat]||SECTION_LABELS.works;
+  document.getElementById('section-title').textContent=lbl.title;
+  document.getElementById('section-meta').textContent=lbl.meta;
+  if(_filterTimer) clearTimeout(_filterTimer);
+  const FADE=320;
+  if(cat==='works'){
+    allCards.forEach(({card})=>{ card.style.display=''; requestAnimationFrame(()=>{card.style.opacity='1';}); });
+    return;
+  }
+  const hiding=allCards.filter(({card})=>card.dataset.cat!==cat);
+  const showing=allCards.filter(({card})=>card.dataset.cat===cat);
+  showing.forEach(({card})=>{ if(card.style.display==='none'){card.style.opacity='0';card.style.display='';} });
+  hiding.forEach(({card})=>{ card.style.opacity='0'; });
+  _filterTimer=setTimeout(()=>{
+    hiding.forEach(({card})=>{ card.style.display='none'; });
+    showing.forEach(({card})=>{ requestAnimationFrame(()=>{card.style.opacity='1';}); });
+  }, FADE);
 }
 
 function openLB(photos, idx) {
@@ -825,7 +831,7 @@ function openLB(photos, idx) {
 }
 function showLB() {
   const p=curPhotos[curIdx];
-  document.getElementById('lb-img').src=p.src ? atob(p.src) : svgSrc(p.label, p.sub, curCat, p.idx, 960, 640);
+  document.getElementById('lb-img').src=p.src ? atob(p.src) : svgSrc(p.label, p.sub, p.cat||curCat, p.idx, 960, 640);
   document.getElementById('lb-counter').textContent=`${curIdx+1} / ${curPhotos.length}`;
   const exifEl = document.getElementById('lb-exif');
   exifEl.innerHTML = (p.exif || '').replace(/\n/g,'<br>');
@@ -866,20 +872,13 @@ document.addEventListener('keydown', e => {
   },{passive:true});
 })();
 
-buildGrid('grid-works','works',DATA.works);
-buildGrid('grid-spain','spain',DATA.spain);
-buildGrid('grid-iceland','iceland',DATA.iceland);
-buildGrid('grid-srilanka','srilanka',DATA.srilanka);
-buildGrid('grid-tokyo','tokyo',DATA.tokyo);
-
+buildMainGrid();
 
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    const t=btn.dataset.target;
-    document.querySelectorAll('.gallery-section').forEach(s=>s.classList.remove('active'));
-    document.getElementById('gallery-'+t).classList.add('active');
+    filterGrid(btn.dataset.target);
   });
 });
 
