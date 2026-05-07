@@ -404,6 +404,7 @@ nav a:hover{color:var(--text)}
   display:flex;align-items:center;justify-content:center;
   transition:all 0.2s;
   -webkit-tap-highlight-color:transparent;
+  z-index:1001;touch-action:manipulation;
 }
 .lb-nav:hover{border-color:var(--accent);color:var(--accent)}
 .lb-prev{left:1rem}
@@ -925,6 +926,14 @@ document.addEventListener('keydown', e => {
       dx<0 ? nextLB() : prevLB();
     }
   },{passive:true});
+  let _wt=null;
+  lb.addEventListener('wheel', e => {
+    if(!lb.classList.contains('open')) return;
+    e.preventDefault();
+    if(_wt) return;
+    e.deltaX>0||e.deltaY>0 ? nextLB() : prevLB();
+    _wt=setTimeout(()=>{_wt=null;},300);
+  },{passive:false});
 })();
 
 buildMainGrid();
