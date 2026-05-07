@@ -198,8 +198,21 @@ nav a:hover{color:var(--text)}
 .ticker-item.glow{color:var(--accent-dim)}
 
 /* ── CATEGORY NAV ── */
-.category-nav{
+.cat-nav-wrap{
   position:sticky;top:var(--header-h);z-index:90;
+}
+.cat-nav-wrap::after{
+  content:'';
+  position:absolute;right:0;top:0;bottom:0;
+  width:3rem;
+  background:linear-gradient(to right,transparent,rgba(13,11,9,0.97));
+  pointer-events:none;
+  z-index:1;
+  transition:opacity 0.3s;
+}
+.cat-nav-wrap.at-end::after{opacity:0}
+
+.category-nav{
   background:rgba(13,11,9,0.95);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
@@ -207,6 +220,8 @@ nav a:hover{color:var(--text)}
   padding:0 2.5rem;display:flex;
   overflow-x:auto;scrollbar-width:none;
   -webkit-overflow-scrolling:touch;
+  touch-action:pan-x;
+  overscroll-behavior-x:contain;
 }
 .category-nav::-webkit-scrollbar{display:none}
 
@@ -509,6 +524,7 @@ footer p{
   </div>
 </div>
 
+<div class="cat-nav-wrap">
 <nav class="category-nav" role="tablist">
   <button class="cat-btn active" data-target="works" role="tab">
     <span class="cat-main">Works</span>
@@ -531,6 +547,7 @@ footer p{
     <span class="cat-sub">日本</span>
   </button>
 </nav>
+</div>
 
 <section class="gallery-section active" id="gallery-works">
   <div class="section-header">
@@ -894,6 +911,18 @@ document.addEventListener('dragstart', e => {
 document.addEventListener('keydown', e => {
   if((e.ctrlKey||e.metaKey) && e.key==='s') e.preventDefault();
 });
+
+// カテゴリナビ: 右端フェードの表示/非表示
+(function(){
+  const nav = document.querySelector('.category-nav');
+  const wrap = document.querySelector('.cat-nav-wrap');
+  function update() {
+    wrap.classList.toggle('at-end', nav.scrollLeft >= nav.scrollWidth - nav.clientWidth - 2);
+  }
+  nav.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update, {passive:true});
+  update();
+})();
 </script>
 </body>
 </html>
