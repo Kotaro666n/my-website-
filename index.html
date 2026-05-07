@@ -808,66 +808,60 @@ function filterGrid(cat) {
   document.getElementById('section-meta').textContent=lbl.meta;
   if(_t1) clearTimeout(_t1);
   if(_t2) clearTimeout(_t2);
+
+  const grid = document.getElementById('grid-main');
+  const D_OUT=180, D_IN=320, S_IN=35, CAP_IN=140;
+  const clear = c => { c.style.transition=c.style.opacity=c.style.transform=c.style.order=''; };
+
+  // Snap any in-progress animations
   allCards.forEach(({card}) => {
-    card.style.transition = 'none';
-    if (card.style.display !== 'none') { card.style.opacity='1'; card.style.transform=''; }
+    card.style.transition='none';
+    if(card.style.display!=='none'){card.style.opacity='1';card.style.transform='';}
   });
-  void document.getElementById('grid-main').offsetHeight;
+  void grid.offsetHeight;
 
-  const S_OUT=12, D_OUT=200, S_IN=40, D_IN=360, CAP=180;
-  const clear = c => { c.style.transition=c.style.opacity=c.style.transform=''; };
-
-  const fadeIn = (cards) => {
-    cards.forEach(({card},i) => {
-      const d = Math.min(i*S_IN, CAP);
-      card.style.opacity='0';
-      card.style.transform='translateY(18px)';
-      card.style.transition=`opacity ${D_IN}ms ${d}ms cubic-bezier(0.16,1,0.3,1), transform ${D_IN}ms ${d}ms cubic-bezier(0.16,1,0.3,1)`;
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        card.style.opacity='1';
-        card.style.transform='none';
-      }));
-    });
-    _t2 = setTimeout(()=>{ cards.forEach(({card})=>clear(card)); },
-      Math.min(cards.length*S_IN, CAP)+D_IN+60);
-  };
-
-  const visible = allCards.filter(({card}) => card.style.display !== 'none');
+  const visible = allCards.filter(({card})=>card.style.display!=='none');
 
   const run = () => {
-    allCards.forEach(({card}) => { card.style.display='none'; card.style.transition='none'; card.style.opacity='1'; card.style.transform=''; });
-
+    // Determine display list and order — no DOM reordering, use CSS order
     let toShow;
-    if (cat === 'works') {
-      toShow = [...allCards].sort((a,b) => a.data.cat!==b.data.cat ? a.data.cat.localeCompare(b.data.cat) : a.data.idx-b.data.idx);
+    if(cat==='works'){
+      toShow=[...allCards].sort((a,b)=>a.data.cat!==b.data.cat?a.data.cat.localeCompare(b.data.cat):a.data.idx-b.data.idx);
     } else {
-      toShow = allCards.filter(({data}) => data.cat===cat).sort((a,b) => a.data.idx-b.data.idx);
+      toShow=allCards.filter(({data})=>data.cat===cat).sort((a,b)=>a.data.idx-b.data.idx);
     }
+    const showSet=new Set(toShow.map(e=>e.card));
 
-    const grid = document.getElementById('grid-main');
-    toShow.forEach(({card}) => {
-      card.style.display='';
-      card.style.opacity='0';
-      card.style.transform='translateY(18px)';
+    allCards.forEach(({card})=>{
       card.style.transition='none';
-      grid.appendChild(card);
+      card.style.opacity='0';
+      card.style.transform='translateY(16px)';
+      card.style.display=showSet.has(card)?'':'none';
     });
+    toShow.forEach(({card},i)=>{ card.style.order=i; });
 
     renumberCards(cat);
-    void grid.offsetHeight;
-    fadeIn(toShow);
+    void grid.offsetHeight; // single reflow to commit state
+
+    toShow.forEach(({card},i)=>{
+      const d=Math.min(i*S_IN,CAP_IN);
+      card.style.transition=`opacity ${D_IN}ms ${d}ms cubic-bezier(0.16,1,0.3,1),transform ${D_IN}ms ${d}ms cubic-bezier(0.16,1,0.3,1)`;
+      card.style.opacity='1';
+      card.style.transform='none';
+    });
+    _t2=setTimeout(()=>toShow.forEach(({card})=>clear(card)), CAP_IN+D_IN+50);
   };
 
-  if (visible.length === 0) { run(); return; }
+  if(visible.length===0){run();return;}
 
-  visible.forEach(({card},i) => {
-    const d = Math.min(i*S_OUT, CAP/2);
-    card.style.transition=`opacity ${D_OUT}ms ${d}ms cubic-bezier(0.4,0,1,1), transform ${D_OUT}ms ${d}ms cubic-bezier(0.4,0,1,1)`;
+  // Fade out all visible
+  visible.forEach(({card},i)=>{
+    const d=Math.min(i*8,60);
+    card.style.transition=`opacity ${D_OUT}ms ${d}ms cubic-bezier(0.4,0,1,1),transform ${D_OUT}ms ${d}ms cubic-bezier(0.4,0,1,1)`;
     card.style.opacity='0';
-    card.style.transform='scale(0.93) translateY(-6px)';
+    card.style.transform='scale(0.94) translateY(-5px)';
   });
-
-  _t1 = setTimeout(run, Math.min(visible.length*S_OUT, CAP/2)+D_OUT+20);
+  _t1=setTimeout(run, 60+D_OUT+20);
 }
 
 function openLB(photos, idx) {
