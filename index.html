@@ -792,8 +792,9 @@ function buildMainGrid() {
 
 function renumberCards(cat) {
   const prefix = cat === 'works' ? '' : SECTION_LABELS[cat].title;
-  const visible = allCards.filter(({card}) => card.style.display !== 'none');
-  visible.forEach(({card}, i) => {
+  const visible = Array.from(document.getElementById('grid-main').querySelectorAll('.photo-card'))
+    .filter(card => card.style.display !== 'none');
+  visible.forEach((card, i) => {
     const n = String(i + 1).padStart(2, '0');
     card.querySelector('.cap-title').textContent = prefix ? `${prefix} ${n}` : n;
   });
