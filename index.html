@@ -817,6 +817,11 @@ function filterGrid(cat) {
   document.getElementById('section-meta').textContent=lbl.meta;
   if(_t1) clearTimeout(_t1);
   if(_t2) clearTimeout(_t2);
+  allCards.forEach(({card}) => {
+    card.style.transition = 'none';
+    if (card.style.display !== 'none') { card.style.opacity='1'; card.style.transform=''; }
+  });
+  void document.getElementById('grid-main').offsetHeight;
 
   const S_OUT=12, D_OUT=200, S_IN=40, D_IN=360, CAP=180;
 
