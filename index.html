@@ -803,6 +803,15 @@ function buildMainGrid() {
   });
 }
 
+function renumberCards(cat) {
+  const prefix = cat === 'works' ? '' : SECTION_LABELS[cat].title;
+  const visible = allCards.filter(({card}) => card.style.display !== 'none');
+  visible.forEach(({card}, i) => {
+    const n = String(i + 1).padStart(2, '0');
+    card.querySelector('.cap-title').textContent = prefix ? `${prefix} ${n}` : n;
+  });
+}
+
 let _filterTimer=null;
 function filterGrid(cat) {
   const lbl = SECTION_LABELS[cat]||SECTION_LABELS.works;
@@ -812,6 +821,7 @@ function filterGrid(cat) {
   const FADE=320;
   if(cat==='works'){
     allCards.forEach(({card})=>{ card.style.display=''; requestAnimationFrame(()=>{card.style.opacity='1';}); });
+    renumberCards('works');
     return;
   }
   const hiding=allCards.filter(({card})=>card.dataset.cat!==cat);
@@ -821,6 +831,7 @@ function filterGrid(cat) {
   _filterTimer=setTimeout(()=>{
     hiding.forEach(({card})=>{ card.style.display='none'; });
     showing.forEach(({card})=>{ requestAnimationFrame(()=>{card.style.opacity='1';}); });
+    renumberCards(cat);
   }, FADE);
 }
 
@@ -873,6 +884,7 @@ document.addEventListener('keydown', e => {
 })();
 
 buildMainGrid();
+renumberCards('works');
 
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
