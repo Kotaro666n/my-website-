@@ -194,26 +194,21 @@ nav a:hover{color:var(--text)}
 /* ── TICKER ── */
 .ticker{
   border-bottom:1px solid var(--border);
-  height:90px;overflow:hidden;
+  height:32px;overflow:hidden;
   display:flex;align-items:center;
 }
 .ticker-track{
   display:flex;white-space:nowrap;
-  animation:tick 55s linear infinite;
+  animation:tick 28s linear infinite;
 }
-@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.ticker-photo{
-  flex-shrink:0;
-  width:130px;height:90px;
-  margin-right:3px;
-  overflow:hidden;
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-25%)}}
+.ticker-item{
+  font-size:0.58rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--muted);
+  padding:0 2.5rem;border-right:1px solid var(--border);
+  display:flex;align-items:center;height:32px;
 }
-.ticker-photo img{
-  width:100%;height:100%;
-  object-fit:cover;display:block;
-  filter:saturate(0.85)contrast(1.08)brightness(0.92);
-  -webkit-user-drag:none;user-select:none;pointer-events:none;
-}
+.ticker-item.glow{color:var(--accent-dim)}
 
 /* ── CATEGORY NAV ── */
 .cat-nav-wrap{
@@ -454,7 +449,7 @@ footer p{
   }
   .hero-title{font-weight:300}
 
-  .ticker-photo{width:110px;height:90px}
+  .ticker-item{padding:0 1.5rem;font-size:0.52rem}
 
   .category-nav{padding:0 0.5rem}
   .cat-btn{padding:0 0.9rem;height:46px}
@@ -520,7 +515,28 @@ footer p{
 </section>
 
 <div class="ticker">
-  <div class="ticker-track"></div>
+  <div class="ticker-track">
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Spain — スペイン</span>
+    <span class="ticker-item">Iceland — アイスランド</span>
+    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
+    <span class="ticker-item">Japan — 日本</span>
+  </div>
 </div>
 
 <div class="cat-nav-wrap">
@@ -856,19 +872,6 @@ buildGrid('grid-iceland','iceland',DATA.iceland);
 buildGrid('grid-srilanka','srilanka',DATA.srilanka);
 buildGrid('grid-tokyo','tokyo',DATA.tokyo);
 
-// 写真ティッカーを構築
-(function(){
-  const all = [];
-  Object.values(DATA).forEach(items => items.forEach(item => { if(item.src) all.push(item); }));
-  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
-  const track = document.querySelector('.ticker-track');
-  [...all, ...all].forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'ticker-photo';
-    el.innerHTML = `<img src="${atob(item.src)}" alt="" loading="lazy">`;
-    track.appendChild(el);
-  });
-})();
 
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
