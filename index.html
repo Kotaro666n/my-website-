@@ -824,10 +824,9 @@ function filterGrid(cat) {
   void document.getElementById('grid-main').offsetHeight;
 
   const S_OUT=12, D_OUT=200, S_IN=40, D_IN=360, CAP=180;
-
   const clear = c => { c.style.transition=c.style.opacity=c.style.transform=''; };
 
-  const fadeIn = (cards, done) => {
+  const fadeIn = (cards) => {
     cards.forEach(({card},i) => {
       const d = Math.min(i*S_IN, CAP);
       card.style.opacity='0';
@@ -838,39 +837,46 @@ function filterGrid(cat) {
         card.style.transform='none';
       }));
     });
-    _t2 = setTimeout(()=>{ cards.forEach(({card})=>clear(card)); if(done) done(); },
+    _t2 = setTimeout(()=>{ cards.forEach(({card})=>clear(card)); },
       Math.min(cards.length*S_IN, CAP)+D_IN+60);
   };
 
-  if(cat==='works'){
-    const hidden=allCards.filter(({card})=>card.style.display==='none');
-    hidden.forEach(({card})=>{ card.style.display=''; card.style.opacity='0'; card.style.transform='translateY(18px)'; card.style.transition='none'; });
-    renumberCards('works');
-    fadeIn(allCards, null);
-    return;
-  }
+  const visible = allCards.filter(({card}) => card.style.display !== 'none');
 
-  const hiding=allCards.filter(({card})=>card.dataset.cat!==cat);
-  const showing=allCards.filter(({card})=>card.dataset.cat===cat);
+  const run = () => {
+    allCards.forEach(({card}) => { card.style.display='none'; card.style.transition='none'; card.style.opacity='1'; card.style.transform=''; });
 
-  // DOMに出しつつ不可視にしておく（グリッド再計算防止）
-  showing.forEach(({card})=>{
-    if(card.style.display==='none'){ card.style.display=''; card.style.opacity='0'; card.style.transform='translateY(18px)'; card.style.transition='none'; }
-  });
+    let toShow;
+    if (cat === 'works') {
+      toShow = [...allCards].sort((a,b) => a.data.cat!==b.data.cat ? a.data.cat.localeCompare(b.data.cat) : a.data.idx-b.data.idx);
+    } else {
+      toShow = allCards.filter(({data}) => data.cat===cat).sort((a,b) => a.data.idx-b.data.idx);
+    }
 
-  // フェードアウト（ずらしながら縮小）
-  hiding.forEach(({card},i)=>{
-    const d=Math.min(i*S_OUT, CAP/2);
+    const grid = document.getElementById('grid-main');
+    toShow.forEach(({card}) => {
+      card.style.display='';
+      card.style.opacity='0';
+      card.style.transform='translateY(18px)';
+      card.style.transition='none';
+      grid.appendChild(card);
+    });
+
+    renumberCards(cat);
+    void grid.offsetHeight;
+    fadeIn(toShow);
+  };
+
+  if (visible.length === 0) { run(); return; }
+
+  visible.forEach(({card},i) => {
+    const d = Math.min(i*S_OUT, CAP/2);
     card.style.transition=`opacity ${D_OUT}ms ${d}ms cubic-bezier(0.4,0,1,1), transform ${D_OUT}ms ${d}ms cubic-bezier(0.4,0,1,1)`;
     card.style.opacity='0';
     card.style.transform='scale(0.93) translateY(-6px)';
   });
 
-  _t1=setTimeout(()=>{
-    hiding.forEach(({card})=>{ card.style.display='none'; clear(card); });
-    renumberCards(cat);
-    fadeIn(showing, null);
-  }, Math.min(hiding.length*S_OUT, CAP/2)+D_OUT+20);
+  _t1 = setTimeout(run, Math.min(visible.length*S_OUT, CAP/2)+D_OUT+20);
 }
 
 function openLB(photos, idx) {
