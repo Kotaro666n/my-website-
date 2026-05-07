@@ -812,7 +812,7 @@ function filterGrid(cat) {
 
   const grid = document.getElementById('grid-main');
   const D_OUT=180, D_IN=320, S_IN=35, CAP_IN=140;
-  const clear = c => { c.style.transition=c.style.opacity=c.style.transform=c.style.order=''; };
+  const clear = c => { c.style.transition=c.style.opacity=c.style.transform=''; };
 
   // Snap any in-progress animations
   allCards.forEach(({card}) => {
