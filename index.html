@@ -515,26 +515,27 @@ footer p{
 
 <div class="ticker">
   <div class="ticker-track">
-    <span class="ticker-item">Works — 作品</span>
     <span class="ticker-item glow">Spain — スペイン</span>
     <span class="ticker-item">Iceland — アイスランド</span>
     <span class="ticker-item glow">Sri Lanka — スリランカ</span>
     <span class="ticker-item">Japan — 日本</span>
-    <span class="ticker-item">Works — 作品</span>
+    <span class="ticker-item glow">Cuba — キューバ</span>
+    <span class="ticker-item">Singapore — シンガポール</span>
+    <span class="ticker-item glow">Vietnam — ベトナム</span>
+    <span class="ticker-item">Spain — スペイン</span>
+    <span class="ticker-item glow">Iceland — アイスランド</span>
+    <span class="ticker-item">Sri Lanka — スリランカ</span>
+    <span class="ticker-item glow">Japan — 日本</span>
+    <span class="ticker-item">Cuba — キューバ</span>
+    <span class="ticker-item glow">Singapore — シンガポール</span>
+    <span class="ticker-item">Vietnam — ベトナム</span>
     <span class="ticker-item glow">Spain — スペイン</span>
     <span class="ticker-item">Iceland — アイスランド</span>
     <span class="ticker-item glow">Sri Lanka — スリランカ</span>
     <span class="ticker-item">Japan — 日本</span>
-    <span class="ticker-item">Works — 作品</span>
-    <span class="ticker-item glow">Spain — スペイン</span>
-    <span class="ticker-item">Iceland — アイスランド</span>
-    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
-    <span class="ticker-item">Japan — 日本</span>
-    <span class="ticker-item">Works — 作品</span>
-    <span class="ticker-item glow">Spain — スペイン</span>
-    <span class="ticker-item">Iceland — アイスランド</span>
-    <span class="ticker-item glow">Sri Lanka — スリランカ</span>
-    <span class="ticker-item">Japan — 日本</span>
+    <span class="ticker-item glow">Cuba — キューバ</span>
+    <span class="ticker-item">Singapore — シンガポール</span>
+    <span class="ticker-item glow">Vietnam — ベトナム</span>
   </div>
 </div>
 
@@ -559,6 +560,18 @@ footer p{
   <button class="cat-btn" data-target="tokyo" role="tab">
     <span class="cat-main">Japan</span>
     <span class="cat-sub">日本</span>
+  </button>
+  <button class="cat-btn" data-target="cuba" role="tab">
+    <span class="cat-main">Cuba</span>
+    <span class="cat-sub">キューバ</span>
+  </button>
+  <button class="cat-btn" data-target="singapore" role="tab">
+    <span class="cat-main">Singapore</span>
+    <span class="cat-sub">シンガポール</span>
+  </button>
+  <button class="cat-btn" data-target="vietnam" role="tab">
+    <span class="cat-main">Vietnam</span>
+    <span class="cat-sub">ベトナム</span>
   </button>
 </nav>
 </div>
@@ -619,11 +632,14 @@ footer p{
 
 <script>
 const PALS = {
-  works:   [['#100e0c','#1e1a14','#b8a070'],['#0e0c10','#181420','#9080a0'],['#0c100e','#141e16','#708868'],['#100c0a','#1e1410','#b87850']],
-  spain:   [['#140c08','#281408','#d4784a'],['#10080c','#200e18','#c45870'],['#100e04','#201c08','#c8a030'],['#0c0a14','#14102a','#8860c0']],
-  iceland: [['#080e14','#0e1a28','#4880b0'],['#08100e','#0e1e18','#38a088'],['#080e16','#0e1630','#3860c0'],['#060e12','#0a1820','#4090b8']],
-  tokyo:   [['#100608','#200c14','#c02860'],['#08080e','#10101e','#7040c0'],['#100806','#201008','#c04820'],['#080a14','#10102a','#3050c8']],
-  etc:     [['#0c0c0e','#18181e','#7878a8'],['#0c0808','#201010','#a84040'],['#080c08','#101a10','#408040'],['#0c0a04','#1e1808','#a88840']],
+  works:     [['#100e0c','#1e1a14','#b8a070'],['#0e0c10','#181420','#9080a0'],['#0c100e','#141e16','#708868'],['#100c0a','#1e1410','#b87850']],
+  spain:     [['#140c08','#281408','#d4784a'],['#10080c','#200e18','#c45870'],['#100e04','#201c08','#c8a030'],['#0c0a14','#14102a','#8860c0']],
+  iceland:   [['#080e14','#0e1a28','#4880b0'],['#08100e','#0e1e18','#38a088'],['#080e16','#0e1630','#3860c0'],['#060e12','#0a1820','#4090b8']],
+  tokyo:     [['#100608','#200c14','#c02860'],['#08080e','#10101e','#7040c0'],['#100806','#201008','#c04820'],['#080a14','#10102a','#3050c8']],
+  cuba:      [['#100a04','#201408','#d4823a'],['#0e0804','#1e1008','#c86030'],['#120c04','#22160a','#e09050'],['#100804','#201008','#b87040']],
+  singapore: [['#040e10','#081a20','#30a8c0'],['#080e10','#10181e','#4090a8'],['#04100e','#081e18','#38b890'],['#060c10','#0c1620','#5080b0']],
+  vietnam:   [['#0c0a04','#1e1608','#c8a030'],['#100806','#200e08','#d06828'],['#080c04','#101808','#70a040'],['#0a0808','#1a1010','#b84040']],
+  etc:       [['#0c0c0e','#18181e','#7878a8'],['#0c0808','#201010','#a84040'],['#080c08','#101a10','#408040'],['#0c0a04','#1e1808','#a88840']],
 };
 
 function svgSrc(label, sub, cat, idx, w, h) {
@@ -738,6 +754,67 @@ const DATA = {
     {label:'Japan 31',sub:'',caption:'Japan 31',idx:2,src:'SkFQQU4vSkFQQU5fMzEuanBn',exif:'SIGMA fp\n36mm · f/2.8 · 1/15s · ISO 1000'},
     {label:'Japan 32',sub:'',caption:'Japan 32',idx:3,src:'SkFQQU4vSkFQQU5fMzIuanBn',exif:'SIGMA fp\n70mm · f/2.8 · 1/15s · ISO 1000'},
   ],
+  cuba:[
+    {label:'Cuba 01',sub:'',caption:'Cuba 01',idx:0,src:'Q1VCQS84NTZBQ0M2Ri0zNTY3LTRFQjMtQTU4MC03QThENDRFRDUyQzkuSlBH',exif:''},
+    {label:'Cuba 02',sub:'',caption:'Cuba 02',idx:1,src:'Q1VCQS9DdWJhIDE4MDIxNi0wMzAxXzE4MDMwNV8wMjE2LkpQRw==',exif:''},
+    {label:'Cuba 03',sub:'',caption:'Cuba 03',idx:2,src:'Q1VCQS9DdWJhIDE4MDIxNi0wMzAxXzE4MDMwNV8wMjE5LkpQRw==',exif:''},
+    {label:'Cuba 04',sub:'',caption:'Cuba 04',idx:3,src:'Q1VCQS9EU0NfNDE5MF8wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 05',sub:'',caption:'Cuba 05',idx:0,src:'Q1VCQS9EU0NfNDE5MV8wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 06',sub:'',caption:'Cuba 06',idx:1,src:'Q1VCQS9EU0NfNDIwNl8wMDAwMV9PcmlnaW5hbC5qcGc=',exif:''},
+    {label:'Cuba 07',sub:'',caption:'Cuba 07',idx:2,src:'Q1VCQS9EU0NfNDIwN18wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 08',sub:'',caption:'Cuba 08',idx:3,src:'Q1VCQS9EU0NfNDIwOV8wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 09',sub:'',caption:'Cuba 09',idx:0,src:'Q1VCQS9EU0NfNDIxM18wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 10',sub:'',caption:'Cuba 10',idx:1,src:'Q1VCQS9EU0NfNDIyNF8wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 11',sub:'',caption:'Cuba 11',idx:2,src:'Q1VCQS9EU0NfNDIzNV8wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 12',sub:'',caption:'Cuba 12',idx:3,src:'Q1VCQS9EU0NfNDIzN18wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 13',sub:'',caption:'Cuba 13',idx:0,src:'Q1VCQS9EU0NfNDI0OV8wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 14',sub:'',caption:'Cuba 14',idx:1,src:'Q1VCQS9EU0NfNDI2MV8wMDAwMS5KUEc=',exif:''},
+    {label:'Cuba 15',sub:'',caption:'Cuba 15',idx:2,src:'Q1VCQS9JTUdfMTUwMy5KUEc=',exif:''},
+    {label:'Cuba 16',sub:'',caption:'Cuba 16',idx:3,src:'Q1VCQS9JTUdfMjM4NC5KUEc=',exif:''},
+    {label:'Cuba 17',sub:'',caption:'Cuba 17',idx:0,src:'Q1VCQS9JTUdfOTg2Ny5KUEc=',exif:''},
+  ],
+  singapore:[
+    {label:'Singapore 01',sub:'',caption:'Singapore 01',idx:0,src:'U2luZ2Fwb3JlL0RTQ18wNDAyLkpQRw==',exif:''},
+    {label:'Singapore 02',sub:'',caption:'Singapore 02',idx:1,src:'U2luZ2Fwb3JlL0RTQ18wNDU5LkpQRw==',exif:''},
+    {label:'Singapore 03',sub:'',caption:'Singapore 03',idx:2,src:'U2luZ2Fwb3JlL0RTQ18wNTE0LkpQRw==',exif:''},
+    {label:'Singapore 04',sub:'',caption:'Singapore 04',idx:3,src:'U2luZ2Fwb3JlL0RTQ18wNTI1LkpQRw==',exif:''},
+    {label:'Singapore 05',sub:'',caption:'Singapore 05',idx:0,src:'U2luZ2Fwb3JlL0RTQ18wNTg3LkpQRw==',exif:''},
+    {label:'Singapore 06',sub:'',caption:'Singapore 06',idx:1,src:'U2luZ2Fwb3JlL0RTQ18wNjQxLkpQRw==',exif:''},
+    {label:'Singapore 07',sub:'',caption:'Singapore 07',idx:2,src:'U2luZ2Fwb3JlL0RTQ18wNjQ3LkpQRw==',exif:''},
+    {label:'Singapore 08',sub:'',caption:'Singapore 08',idx:3,src:'U2luZ2Fwb3JlL0RTQ18wNjU2LkpQRw==',exif:''},
+    {label:'Singapore 09',sub:'',caption:'Singapore 09',idx:0,src:'U2luZ2Fwb3JlL0RTQ18wNjg1LkpQRw==',exif:''},
+    {label:'Singapore 10',sub:'',caption:'Singapore 10',idx:1,src:'U2luZ2Fwb3JlL0RTQ18wNzU0LkpQRw==',exif:''},
+    {label:'Singapore 11',sub:'',caption:'Singapore 11',idx:2,src:'U2luZ2Fwb3JlL0RTQ18wODEyLkpQRw==',exif:''},
+    {label:'Singapore 12',sub:'',caption:'Singapore 12',idx:3,src:'U2luZ2Fwb3JlL0RTQ18wODE1LkpQRw==',exif:''},
+    {label:'Singapore 13',sub:'',caption:'Singapore 13',idx:0,src:'U2luZ2Fwb3JlL0RTQ18wOTA1LkpQRw==',exif:''},
+    {label:'Singapore 14',sub:'',caption:'Singapore 14',idx:1,src:'U2luZ2Fwb3JlL0RTQ18wOTIwLkpQRw==',exif:''},
+    {label:'Singapore 15',sub:'',caption:'Singapore 15',idx:2,src:'U2luZ2Fwb3JlL0RTQ18wOTQzLkpQRw==',exif:''},
+    {label:'Singapore 16',sub:'',caption:'Singapore 16',idx:3,src:'U2luZ2Fwb3JlL0RTQ18wOTUyLkpQRw==',exif:''},
+    {label:'Singapore 17',sub:'',caption:'Singapore 17',idx:0,src:'U2luZ2Fwb3JlL0RTQ18wOTY3LkpQRw==',exif:''},
+    {label:'Singapore 18',sub:'',caption:'Singapore 18',idx:1,src:'U2luZ2Fwb3JlL0RTQ18wOTkxLkpQRw==',exif:''},
+    {label:'Singapore 19',sub:'',caption:'Singapore 19',idx:2,src:'U2luZ2Fwb3JlL0lNR18wMjIxLkpQRw==',exif:''},
+    {label:'Singapore 20',sub:'',caption:'Singapore 20',idx:3,src:'U2luZ2Fwb3JlL0lNR18wMjI3LkpQRw==',exif:''},
+    {label:'Singapore 21',sub:'',caption:'Singapore 21',idx:0,src:'U2luZ2Fwb3JlL0lNR18xMTAxLkpQRw==',exif:''},
+    {label:'Singapore 22',sub:'',caption:'Singapore 22',idx:1,src:'U2luZ2Fwb3JlL0lNR180NTk1LkpQRw==',exif:''},
+  ],
+  vietnam:[
+    {label:'Vietnam 01',sub:'',caption:'Vietnam 01',idx:0,src:'VmlldG5hbS9EU0NfMDIwOC5KUEc=',exif:''},
+    {label:'Vietnam 02',sub:'',caption:'Vietnam 02',idx:1,src:'VmlldG5hbS9EU0NfMDIzMy5KUEc=',exif:''},
+    {label:'Vietnam 03',sub:'',caption:'Vietnam 03',idx:2,src:'VmlldG5hbS9EU0NfMDI0MC5KUEc=',exif:''},
+    {label:'Vietnam 04',sub:'',caption:'Vietnam 04',idx:3,src:'VmlldG5hbS9EU0NfMDI0Mi5KUEc=',exif:''},
+    {label:'Vietnam 05',sub:'',caption:'Vietnam 05',idx:0,src:'VmlldG5hbS9EU0NfMDI1MC5KUEc=',exif:''},
+    {label:'Vietnam 06',sub:'',caption:'Vietnam 06',idx:1,src:'VmlldG5hbS9EU0NfMDI1Mi5KUEc=',exif:''},
+    {label:'Vietnam 07',sub:'',caption:'Vietnam 07',idx:2,src:'VmlldG5hbS9EU0NfMDI3Mi5KUEc=',exif:''},
+    {label:'Vietnam 08',sub:'',caption:'Vietnam 08',idx:3,src:'VmlldG5hbS9EU0NfMDI3My5KUEc=',exif:''},
+    {label:'Vietnam 09',sub:'',caption:'Vietnam 09',idx:0,src:'VmlldG5hbS9EU0NfMDI3Ny5KUEc=',exif:''},
+    {label:'Vietnam 10',sub:'',caption:'Vietnam 10',idx:1,src:'VmlldG5hbS9EU0NfMDI4Ny5KUEc=',exif:''},
+    {label:'Vietnam 11',sub:'',caption:'Vietnam 11',idx:2,src:'VmlldG5hbS9EU0NfMDI5My5KUEc=',exif:''},
+    {label:'Vietnam 12',sub:'',caption:'Vietnam 12',idx:3,src:'VmlldG5hbS9EU0NfMDMzMy5KUEc=',exif:''},
+    {label:'Vietnam 13',sub:'',caption:'Vietnam 13',idx:0,src:'VmlldG5hbS9EU0NfMDMzNy5KUEc=',exif:''},
+    {label:'Vietnam 14',sub:'',caption:'Vietnam 14',idx:1,src:'VmlldG5hbS9EU0NfMDM0MC5KUEc=',exif:''},
+    {label:'Vietnam 15',sub:'',caption:'Vietnam 15',idx:2,src:'VmlldG5hbS9JTUdfMTExMi5KUEc=',exif:''},
+    {label:'Vietnam 16',sub:'',caption:'Vietnam 16',idx:3,src:'VmlldG5hbS9JTUdfODUzMi5KUEc=',exif:''},
+  ],
   srilanka:[
     {label:'Sri Lanka 01',sub:'',caption:'Sri Lanka 01',idx:0,src:'U1JJTEFOS0EvU1JJTEFOS0FfMS5qcGc=',exif:''},
     {label:'Sri Lanka 02',sub:'',caption:'Sri Lanka 02',idx:1,src:'U1JJTEFOS0EvU1JJTEFOS0FfMi5qcGc=',exif:''},
@@ -758,11 +835,14 @@ const DATA = {
 let curPhotos=[], curIdx=0, curCat='works';
 
 const SECTION_LABELS = {
-  works:    {title:'All',       meta:'全カテゴリ — All Photos'},
-  spain:    {title:'Spain',     meta:'スペイン — España'},
-  iceland:  {title:'Iceland',   meta:'アイスランド — Ísland'},
-  srilanka: {title:'Sri Lanka', meta:'スリランカ — Sri Lanka'},
-  tokyo:    {title:'Japan',     meta:'日本 — Japan'},
+  works:     {title:'All',         meta:'全カテゴリ — All Photos'},
+  spain:     {title:'Spain',       meta:'スペイン — España'},
+  iceland:   {title:'Iceland',     meta:'アイスランド — Ísland'},
+  srilanka:  {title:'Sri Lanka',   meta:'スリランカ — Sri Lanka'},
+  tokyo:     {title:'Japan',       meta:'日本 — Japan'},
+  cuba:      {title:'Cuba',        meta:'キューバ — Cuba'},
+  singapore: {title:'Singapore',   meta:'シンガポール — Singapore'},
+  vietnam:   {title:'Vietnam',     meta:'ベトナム — Vietnam'},
 };
 
 let allCards = [];
