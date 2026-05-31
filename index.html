@@ -522,6 +522,8 @@ footer p{
     <span class="ticker-item glow">Cuba — キューバ</span>
     <span class="ticker-item">Singapore — シンガポール</span>
     <span class="ticker-item glow">Vietnam — ベトナム</span>
+    <span class="ticker-item">Indonesia — インドネシア</span>
+    <span class="ticker-item glow">Thailand — タイ</span>
     <span class="ticker-item">Spain — スペイン</span>
     <span class="ticker-item glow">Iceland — アイスランド</span>
     <span class="ticker-item">Sri Lanka — スリランカ</span>
@@ -529,6 +531,8 @@ footer p{
     <span class="ticker-item">Cuba — キューバ</span>
     <span class="ticker-item glow">Singapore — シンガポール</span>
     <span class="ticker-item">Vietnam — ベトナム</span>
+    <span class="ticker-item glow">Indonesia — インドネシア</span>
+    <span class="ticker-item">Thailand — タイ</span>
     <span class="ticker-item glow">Spain — スペイン</span>
     <span class="ticker-item">Iceland — アイスランド</span>
     <span class="ticker-item glow">Sri Lanka — スリランカ</span>
@@ -536,6 +540,8 @@ footer p{
     <span class="ticker-item glow">Cuba — キューバ</span>
     <span class="ticker-item">Singapore — シンガポール</span>
     <span class="ticker-item glow">Vietnam — ベトナム</span>
+    <span class="ticker-item">Indonesia — インドネシア</span>
+    <span class="ticker-item glow">Thailand — タイ</span>
   </div>
 </div>
 
@@ -572,6 +578,14 @@ footer p{
   <button class="cat-btn" data-target="vietnam" role="tab">
     <span class="cat-main">Vietnam</span>
     <span class="cat-sub">ベトナム</span>
+  </button>
+  <button class="cat-btn" data-target="indonesia" role="tab">
+    <span class="cat-main">Indonesia</span>
+    <span class="cat-sub">インドネシア</span>
+  </button>
+  <button class="cat-btn" data-target="thailand" role="tab">
+    <span class="cat-main">Thailand</span>
+    <span class="cat-sub">タイ</span>
   </button>
 </nav>
 </div>
@@ -636,9 +650,11 @@ const PALS = {
   spain:     [['#140c08','#281408','#d4784a'],['#10080c','#200e18','#c45870'],['#100e04','#201c08','#c8a030'],['#0c0a14','#14102a','#8860c0']],
   iceland:   [['#080e14','#0e1a28','#4880b0'],['#08100e','#0e1e18','#38a088'],['#080e16','#0e1630','#3860c0'],['#060e12','#0a1820','#4090b8']],
   tokyo:     [['#100608','#200c14','#c02860'],['#08080e','#10101e','#7040c0'],['#100806','#201008','#c04820'],['#080a14','#10102a','#3050c8']],
-  cuba:      [['#100a04','#201408','#d4823a'],['#0e0804','#1e1008','#c86030'],['#120c04','#22160a','#e09050'],['#100804','#201008','#b87040']],
-  singapore: [['#040e10','#081a20','#30a8c0'],['#080e10','#10181e','#4090a8'],['#04100e','#081e18','#38b890'],['#060c10','#0c1620','#5080b0']],
-  vietnam:   [['#0c0a04','#1e1608','#c8a030'],['#100806','#200e08','#d06828'],['#080c04','#101808','#70a040'],['#0a0808','#1a1010','#b84040']],
+  cuba:       [['#100a04','#201408','#d4823a'],['#0e0804','#1e1008','#c86030'],['#120c04','#22160a','#e09050'],['#100804','#201008','#b87040']],
+  singapore:  [['#040e10','#081a20','#30a8c0'],['#080e10','#10181e','#4090a8'],['#04100e','#081e18','#38b890'],['#060c10','#0c1620','#5080b0']],
+  vietnam:    [['#0c0a04','#1e1608','#c8a030'],['#100806','#200e08','#d06828'],['#080c04','#101808','#70a040'],['#0a0808','#1a1010','#b84040']],
+  indonesia:  [['#080e0c','#101e18','#38b878'],['#0a0e08','#161e10','#88b840'],['#040e0a','#081c12','#30a870'],['#080c06','#141808','#70a838']],
+  thailand:   [['#100806','#201008','#d06030'],['#0c0808','#1c1010','#c04040'],['#100a04','#201408','#c87830'],['#0e0806','#1c1008','#d85028']],
   etc:       [['#0c0c0e','#18181e','#7878a8'],['#0c0808','#201010','#a84040'],['#080c08','#101a10','#408040'],['#0c0a04','#1e1808','#a88840']],
 };
 
@@ -796,6 +812,29 @@ const DATA = {
     {label:'Singapore 21',sub:'',caption:'Singapore 21',idx:0,src:'U2luZ2Fwb3JlL0lNR18xMTAxLkpQRw==',exif:''},
     {label:'Singapore 22',sub:'',caption:'Singapore 22',idx:1,src:'U2luZ2Fwb3JlL0lNR180NTk1LkpQRw==',exif:''},
   ],
+  indonesia:[
+    {label:'Indonesia 01',sub:'',caption:'Indonesia 01',idx:0,src:'SW5kb25lc2lhLzYxNzUwMjAxLUREQjAtNEI5Ni04OTlBLTUzMDEzN0M3QjIyQi5KUEc=',exif:''},
+    {label:'Indonesia 02',sub:'',caption:'Indonesia 02',idx:1,src:'SW5kb25lc2lhL0RTQ185OTIzLkpQRw==',exif:''},
+    {label:'Indonesia 03',sub:'',caption:'Indonesia 03',idx:2,src:'SW5kb25lc2lhL0RTQ185OTI3LkpQRw==',exif:''},
+    {label:'Indonesia 04',sub:'',caption:'Indonesia 04',idx:3,src:'SW5kb25lc2lhL0RTQ185OTQ3LkpQRw==',exif:''},
+    {label:'Indonesia 05',sub:'',caption:'Indonesia 05',idx:0,src:'SW5kb25lc2lhL0RTQ185OTY4LkpQRw==',exif:''},
+    {label:'Indonesia 06',sub:'',caption:'Indonesia 06',idx:1,src:'SW5kb25lc2lhL0lNR18xMzgwLkpQRw==',exif:''},
+  ],
+  thailand:[
+    {label:'Thailand 01',sub:'',caption:'Thailand 01',idx:0,src:'VGhhaWxhbmQvRFNDXzkxMDkuSlBH',exif:''},
+    {label:'Thailand 02',sub:'',caption:'Thailand 02',idx:1,src:'VGhhaWxhbmQvRFNDXzkyODEuSlBH',exif:''},
+    {label:'Thailand 03',sub:'',caption:'Thailand 03',idx:2,src:'VGhhaWxhbmQvRFNDXzkzMTIuSlBH',exif:''},
+    {label:'Thailand 04',sub:'',caption:'Thailand 04',idx:3,src:'VGhhaWxhbmQvRFNDXzkzMzEuSlBH',exif:''},
+    {label:'Thailand 05',sub:'',caption:'Thailand 05',idx:0,src:'VGhhaWxhbmQvRFNDXzk2MTAuSlBH',exif:''},
+    {label:'Thailand 06',sub:'',caption:'Thailand 06',idx:1,src:'VGhhaWxhbmQvRjY1QTIzNzMtN0UxNC00RDlDLThEOTktN0VBN0MwNEVFMDkyLkpQRw==',exif:''},
+    {label:'Thailand 07',sub:'',caption:'Thailand 07',idx:2,src:'VGhhaWxhbmQvSU1HXzA5MDMuSEVJQw==',exif:''},
+    {label:'Thailand 08',sub:'',caption:'Thailand 08',idx:3,src:'VGhhaWxhbmQvSU1HXzA5MDcuSEVJQw==',exif:''},
+    {label:'Thailand 09',sub:'',caption:'Thailand 09',idx:0,src:'VGhhaWxhbmQvSU1HXzA5MTUuSlBH',exif:''},
+    {label:'Thailand 10',sub:'',caption:'Thailand 10',idx:1,src:'VGhhaWxhbmQvSU1HXzA5NDguSEVJQw==',exif:''},
+    {label:'Thailand 11',sub:'',caption:'Thailand 11',idx:2,src:'VGhhaWxhbmQvSU1HXzA5NjEuSEVJQw==',exif:''},
+    {label:'Thailand 12',sub:'',caption:'Thailand 12',idx:3,src:'VGhhaWxhbmQvSU1HXzA5NjMuSlBH',exif:''},
+    {label:'Thailand 13',sub:'',caption:'Thailand 13',idx:0,src:'VGhhaWxhbmQvSU1HXzEwNDEuSEVJQw==',exif:''},
+  ],
   vietnam:[
     {label:'Vietnam 01',sub:'',caption:'Vietnam 01',idx:0,src:'VmlldG5hbS9EU0NfMDIwOC5KUEc=',exif:''},
     {label:'Vietnam 02',sub:'',caption:'Vietnam 02',idx:1,src:'VmlldG5hbS9EU0NfMDIzMy5KUEc=',exif:''},
@@ -842,6 +881,8 @@ const SECTION_LABELS = {
   cuba:      {title:'Cuba',        meta:'キューバ — Cuba'},
   singapore: {title:'Singapore',   meta:'シンガポール — Singapore'},
   vietnam:   {title:'Vietnam',     meta:'ベトナム — Vietnam'},
+  indonesia: {title:'Indonesia',   meta:'インドネシア — Indonesia'},
+  thailand:  {title:'Thailand',    meta:'タイ — Thailand'},
 };
 
 let allCards = [];
