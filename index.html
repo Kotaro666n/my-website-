@@ -555,45 +555,41 @@ footer p{
 
 <div class="cat-nav-wrap">
 <nav class="category-nav" role="tablist">
-  <button class="cat-btn active" data-target="works" role="tab">
-    <span class="cat-main">Works</span>
-    <span class="cat-sub">作品</span>
-  </button>
-  <button class="cat-btn" data-target="spain" role="tab">
-    <span class="cat-main">Spain</span>
-    <span class="cat-sub">スペイン</span>
-  </button>
-  <button class="cat-btn" data-target="iceland" role="tab">
-    <span class="cat-main">Iceland</span>
-    <span class="cat-sub">アイスランド</span>
-  </button>
-  <button class="cat-btn" data-target="srilanka" role="tab">
-    <span class="cat-main">Sri Lanka</span>
-    <span class="cat-sub">スリランカ</span>
-  </button>
-  <button class="cat-btn" data-target="tokyo" role="tab">
+  <button class="cat-btn active" data-target="tokyo" role="tab">
     <span class="cat-main">Japan</span>
     <span class="cat-sub">日本</span>
   </button>
-  <button class="cat-btn" data-target="cuba" role="tab">
-    <span class="cat-main">Cuba</span>
-    <span class="cat-sub">キューバ</span>
-  </button>
-  <button class="cat-btn" data-target="singapore" role="tab">
-    <span class="cat-main">Singapore</span>
-    <span class="cat-sub">シンガポール</span>
-  </button>
-  <button class="cat-btn" data-target="vietnam" role="tab">
-    <span class="cat-main">Vietnam</span>
-    <span class="cat-sub">ベトナム</span>
+  <button class="cat-btn" data-target="spain" role="tab">
+    <span class="cat-main">Spain</span>
+    <span class="cat-sub">2024</span>
   </button>
   <button class="cat-btn" data-target="indonesia" role="tab">
     <span class="cat-main">Indonesia</span>
-    <span class="cat-sub">インドネシア</span>
+    <span class="cat-sub">2019</span>
   </button>
   <button class="cat-btn" data-target="thailand" role="tab">
     <span class="cat-main">Thailand</span>
-    <span class="cat-sub">タイ</span>
+    <span class="cat-sub">2019</span>
+  </button>
+  <button class="cat-btn" data-target="srilanka" role="tab">
+    <span class="cat-main">Sri Lanka</span>
+    <span class="cat-sub">2018</span>
+  </button>
+  <button class="cat-btn" data-target="cuba" role="tab">
+    <span class="cat-main">Cuba</span>
+    <span class="cat-sub">2018</span>
+  </button>
+  <button class="cat-btn" data-target="iceland" role="tab">
+    <span class="cat-main">Iceland</span>
+    <span class="cat-sub">2017</span>
+  </button>
+  <button class="cat-btn" data-target="singapore" role="tab">
+    <span class="cat-main">Singapore</span>
+    <span class="cat-sub">2015</span>
+  </button>
+  <button class="cat-btn" data-target="vietnam" role="tab">
+    <span class="cat-main">Vietnam</span>
+    <span class="cat-sub">2015</span>
   </button>
 </nav>
 </div>
@@ -1054,7 +1050,7 @@ document.addEventListener('keydown', e => {
 })();
 
 buildMainGrid();
-renumberCards('works');
+filterGrid('tokyo');
 
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
